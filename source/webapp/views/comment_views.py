@@ -4,7 +4,13 @@ from django.views.generic import TemplateView
 
 from webapp.forms import CommentForm
 from webapp.models import Comment
+from .base_views import ListView
 
+
+class CommentListView(ListView):
+    context_key = 'comments'
+    model = Comment
+    template_name = 'comment/index.html'
 
 class CommentIndex(TemplateView):
     template_name = 'comment.html'
