@@ -10,6 +10,8 @@ class Article(models.Model):
     category = models.ForeignKey('Category', on_delete=models.PROTECT, null=True, blank=True, verbose_name='Категория',
                                  related_name='articles')
 
+    tags = models.ManyToManyField('Tag', blank=True, related_name='articles', verbose_name='Теги')
+
     def __str__(self):
         return self.title
 
@@ -31,3 +33,12 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Tag(models.Model):
+   name = models.CharField(max_length=31, verbose_name='Тег')
+   created_at = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
+
+   def __str__(self): 
+       return self.name
+

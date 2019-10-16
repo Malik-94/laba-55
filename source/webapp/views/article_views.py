@@ -43,6 +43,9 @@ class ArticleCreateView(View):
         else:
             return render(request, 'article/create.html', context={'form': form})
 
+    def parsit(self):
+        pass
+
 
 class ArticleUpdateView(View):
     def get(self, request, *args, **kwargs):
