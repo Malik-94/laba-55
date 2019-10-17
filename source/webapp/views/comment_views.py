@@ -1,6 +1,5 @@
-from django.shortcuts import render, get_list_or_404, redirect
-from django.views import View
-from django.views.generic import TemplateView
+from django.urls import reverse
+from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 
 from webapp.forms import CommentForm
 from webapp.models import Comment
@@ -12,8 +11,10 @@ class CommentListView(ListView):
     model = Comment
     template_name = 'comment/index.html'
 
+
 class CommentIndex(TemplateView):
     template_name = 'comment.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comments'] = Comment.objects.all()
@@ -21,20 +22,30 @@ class CommentIndex(TemplateView):
 
 
 
-class CommentCreateView(View):
-    def get(self, request, *args, **kwargs):
-        form = CommentForm()
-        return render(request, 'comment/create.html', context={'form': form})
+class CommentCreateView(CreateView):
+    model = Comment
+    template_name = 'comment/create.html'
+    form_class = CommentForm
 
-    def post(self, request, *args, **kwargs):
-        form = CommentForm(data=request.POST)
-        if form.is_valid():
-            comment = Comment.objects.create(
-                author=form.cleaned_data['author'],
-                text=form.cleaned_data['text'],
-                article=form.cleaned_data['article']
-            )
-            # это нужно исправить на ваш url.
-            return redirect('article_view', pk=comment.article.pk)
-        else:
-            return render(request, 'comment/create.html', context={'form': form})
+    def get_success_url(self):
+        return reverse('article_view', kwargs={'pk': self.object.article.pk})
+
+
+class CommentUpdateView(UpdateView):
+    model = Comment
+    template_name = 'comment/update.html'
+    form_class = CommentForm
+    context_object_name = 'comment'
+
+    def get_success_url(self):
+        return reverse('article_view', kwargs={'pk': self.object.article.pk})
+
+
+class CommentDeleteView(DeleteView):
+    model = Comment
+
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('article_view', kwargs={'pk': self.object.article.pk})

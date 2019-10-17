@@ -5,13 +5,7 @@ from webapp.models import Article
 
 
 class ArticleForm(ModelForm):
-    tags = forms.CharField(max_length=100,required=False,)
-    # title = forms.CharField(max_length=200, required=True, label='Title')
-    # author = forms.CharField(max_length=40, required=True, label='Author')
-    # text = forms.CharField(max_length=3000, required=True, label='Text',
-    #                        widget=widgets.Textarea)
-    # category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False, label='Category',
-    #                                   empty_label=None)
+    tags = forms.CharField(max_length=200,required=False, label='Тег')
 
     class Meta:
         model = Article
@@ -25,3 +19,6 @@ class CommentForm(forms.Form):
     text = forms.CharField(max_length=400, required=True, label='Text',
                            widget=widgets.Textarea)
 
+
+class SimpleSearchForm(forms.Form):
+    search = forms.CharField(max_length=100, required=False, label="Найти")

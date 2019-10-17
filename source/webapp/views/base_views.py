@@ -13,3 +13,5 @@ class ListView(TemplateView):
 
     def get_objects(self):
         return self.model.objects.all()
+
+
