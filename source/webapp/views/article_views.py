@@ -18,6 +18,9 @@ class IndexView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
         context['form'] = SimpleSearchForm(self.request.GET)
+        tag_filter = self.request.GET
+        if 'tag' in tag_filter:
+            context['articles'] = Article.objects.filter(tags__name=tag_filter.get('tag'))
         return context
 
 
@@ -27,7 +30,10 @@ class IndexView(ListView):
         if form.is_valid():
             query = form.cleaned_data['search']
             if query:
-                queryset = queryset.filter(Q(text__icontains=query)|Q(title__icontains=query))
+                queryset = queryset.filter(Q(text__icontains=query)
+                                           |Q(title__icontains=query)
+                                           |Q(tags__name__iexact=query))
+
         return queryset
 
 
